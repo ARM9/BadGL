@@ -1,0 +1,10 @@
+#version 330 core
+
+layout(location = 1) in vec4 vertexPosition;
+
+uniform vec2 offset;
+
+void main()
+{
+	gl_Position = vertexPosition * vec4(offset, 1.0, 1.0);
+}
