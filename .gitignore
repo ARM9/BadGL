@@ -4,6 +4,7 @@ Release/
 *.dll
 *.obj
 *.o
+*.h.gch
 *.sublime-project
 *.sublime-workspace
 *.npp
