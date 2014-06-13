@@ -16,6 +16,7 @@ bool Shader::load(GLenum type, const char *file)
 {
 	std::ifstream inFile;
 	std::string shaderCode;
+	
 	inFile.open(file, std::ios::in);
 	if(inFile.is_open()){
 		std::string line("");
@@ -35,16 +36,10 @@ bool Shader::load(GLenum type, const char *file)
 	glShaderSource(shaderID, 1, &cstrPtr, NULL);
 	glCompileShader(shaderID);
 
-	GLint result = GL_FALSE;
-	glGetShaderiv(shaderID, GL_COMPILE_STATUS, &result);
-	if(GL_FALSE == result){
-		int infoLogLen;
-		glGetShaderiv(shaderID, GL_INFO_LOG_LENGTH, &infoLogLen);
-		std::vector<char> shaderErrorMsg(infoLogLen + 1);
-		glGetShaderInfoLog(shaderID, infoLogLen, NULL, &shaderErrorMsg[0]);
-		printf("GLSL Error: %s\n", &shaderErrorMsg[0]);
+	if (shaderError(shaderID)){
 		return false;
 	}
+	
 	m_Shaders.push_back(shaderID);
 	
 	return true;
@@ -52,24 +47,21 @@ bool Shader::load(GLenum type, const char *file)
 
 bool Shader::link()
 {
-	for(auto& it : m_Shaders){
-		glAttachShader(m_ProgramID, it);
+	if(!m_Shaders.empty())
+	{
+		for(auto& it : m_Shaders){
+			glAttachShader(m_ProgramID, it);
+		}
+		glLinkProgram(m_ProgramID);
+		
+		deleteShaders();
+		
+		if(!programError())
+			return true;
+	}else{
+		printf("Error: no shaders to link\n");
 	}
-	glLinkProgram(m_ProgramID);
-
-	GLint result = GL_FALSE;
-	glGetProgramiv(m_ProgramID, GL_LINK_STATUS, &result);
-	if(GL_FALSE == result){
-		int infoLogLen;
-		glGetProgramiv(m_ProgramID, GL_INFO_LOG_LENGTH, &infoLogLen);
-		std::vector<char> programErrorMsg(infoLogLen+1);
-		glGetProgramInfoLog(m_ProgramID, infoLogLen, NULL, &programErrorMsg[0]);
-		printf("Link error: %s\n", &programErrorMsg[0]);
-		return false;
-	}
-	deleteShaders();
-
-	return true;
+	return false;
 }
 
 void Shader::use()
@@ -90,5 +82,35 @@ void Shader::deleteShaders()
 GLint Shader::getUniformLocation(const char *name)
 {
 	return glGetUniformLocation(m_ProgramID, name);
+}
+
+bool Shader::programError()
+{
+	GLint result = GL_FALSE;
+	glGetProgramiv(m_ProgramID, GL_LINK_STATUS, &result);
+	if (GL_FALSE == result){
+		int infoLogLen;
+		glGetProgramiv(m_ProgramID, GL_INFO_LOG_LENGTH, &infoLogLen);
+		std::vector<char> errorMsg(infoLogLen + 1);
+		glGetProgramInfoLog(m_ProgramID, infoLogLen, NULL, &errorMsg[0]);
+		printf("%s\n", &errorMsg[0]);
+		return true;
+	}
+	return false;
+}
+
+bool Shader::shaderError(GLenum name)
+{
+	GLint result = GL_FALSE;
+	glGetShaderiv(name, GL_COMPILE_STATUS, &result);
+	if (GL_FALSE == result){
+		int infoLogLen;
+		glGetShaderiv(name, GL_INFO_LOG_LENGTH, &infoLogLen);
+		std::vector<char> errorMsg(infoLogLen + 1);
+		glGetShaderInfoLog(name, infoLogLen, NULL, &errorMsg[0]);
+		printf("%s\n", &errorMsg[0]);
+		return true;
+	}
+	return false;
 }
 

@@ -15,6 +15,8 @@ public:
 protected:
 	void deleteShaders();
 
+	bool programError();
+	bool shaderError(GLenum name);
 private:
 	GLuint m_ProgramID;
 	std::vector<GLuint> m_Shaders;

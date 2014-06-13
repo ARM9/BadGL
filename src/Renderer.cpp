@@ -56,7 +56,6 @@ Renderer::Renderer(int width, int height)
 
 	glEnableVertexAttribArray(1);
 	
-
 	glBindVertexArray(0);
 
 	m_FlatShader = new Shader();
@@ -95,11 +94,12 @@ void Renderer::render(float dt)
 	glClear(GL_COLOR_BUFFER_BIT);
 	dx = sin(glfwGetTime());
 	dy = cos(glfwGetTime());
+	
 	// Draw model
 	m_FlatShader->use();
 	glUniform2f(m_OffsetLocation, dx, dy);
 	glBindVertexArray(m_FlatVaoID);
-
+	
 	//glBindBuffer(GL_ARRAY_BUFFER, m_VertexBuffer);
 	
 	glVertexAttribPointer(0, 4, GL_FLOAT, GL_FALSE, 0, 0);
