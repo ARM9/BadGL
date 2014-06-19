@@ -79,6 +79,11 @@ void Shader::deleteShaders()
 	m_Shaders.clear();
 }
 
+void Shader::bindAttribLocation(GLuint index, const char *name)
+{
+	glBindAttribLocation(m_ProgramID, index, name);
+}
+
 GLint Shader::getUniformLocation(const char *name)
 {
 	return glGetUniformLocation(m_ProgramID, name);

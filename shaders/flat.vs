@@ -1,11 +1,13 @@
-#version 330 core
+#version 150 core
 
-layout(location = 0) in vec4 vertexPosition_modelspace;
-layout(location = 1) in vec4 vertexColor;
+in vec3 vertexPosition_modelspace;
+in vec3 vertexColor;
+//layout(location = 0) in vec4 vertexPosition_modelspace;
+//layout(location = 1) in vec4 vertexColor;
 
 uniform vec2 offset;
 
-out vec4 aVColor;
+out vec3 aVColor;
 
 void main()
 {

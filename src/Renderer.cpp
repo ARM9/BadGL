@@ -3,13 +3,13 @@
 #include "Shader.h"
 
 const GLfloat g_TriangleVertices[] = {
-	0.f, 1.0f, 0.f, 1.f,
-	1.0f, -1.0f, 0.f, 1.f,
-	-1.0f, -1.0f, 0.f, 1.f,
+	0.f, 1.0f, 0.f,
+	1.0f, -1.0f, 0.f,
+	-1.0f, -1.0f, 0.f,
 
-	1.f, 0.f, 0.f, 1.f,
-	0.f, 1.f, 0.f, 1.f,
-	0.f, 0.f, 1.f, 1.f};
+	1.f, 0.f, 0.f,
+	0.f, 1.f, 0.f,
+	0.f, 0.f, 1.f};
 
 const GLfloat g_fff[] = {
 	0.6f, 0.6f, 0.f,
@@ -36,25 +36,31 @@ Renderer::Renderer(int width, int height)
 	glBindBuffer(GL_ARRAY_BUFFER,  m_VertexBuffer);
 	// copy data into buffer object
 	glBufferData(GL_ARRAY_BUFFER, sizeof(g_TriangleVertices), g_TriangleVertices, GL_STATIC_DRAW);
+	// bind vertex attrib pointers to vao
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, 0);
+	glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 0, (void*)(3*3*sizeof(*g_TriangleVertices)));
 	// index buffer
 	glGenBuffers(1, &m_IndexBuffer);
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_IndexBuffer);
 	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(g_TriangleIndices), g_TriangleIndices, GL_STATIC_DRAW);
-
+	// enable vertex attribs
 	glEnableVertexAttribArray(0);
 	glEnableVertexAttribArray(1);
-	
+
+	// Outline vao	
 	glGenVertexArrays(1, &m_OutlineVaoID);
 	glBindVertexArray(m_OutlineVaoID);
 	// vertex buffer
 	glGenBuffers(2, m_OutlineBuffer);
 	glBindBuffer(GL_ARRAY_BUFFER, m_OutlineBuffer[0]);
 	glBufferData(GL_ARRAY_BUFFER, sizeof(g_TriangleVertices), g_TriangleVertices, GL_STATIC_DRAW);
+	// bind vertex attrib pointer to vao
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, 0);
 	// index buffer
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_OutlineBuffer[1]);
 	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(g_OutlineIndices), g_OutlineIndices, GL_STATIC_DRAW);
 
-	glEnableVertexAttribArray(1);
+	glEnableVertexAttribArray(0);
 	
 	glBindVertexArray(0);
 
@@ -65,13 +71,18 @@ Renderer::Renderer(int width, int height)
 	m_OutlineShader = new Shader();
 	m_OutlineShader->load(GL_VERTEX_SHADER, "shaders/outline.vs");
 	m_OutlineShader->load(GL_FRAGMENT_SHADER, "shaders/outline.fs");
+	//bind attribute locations	
+	m_FlatShader->bindAttribLocation(0, "vertexPosition_modelspace");
+	m_FlatShader->bindAttribLocation(1, "vertexColor");
+	m_OutlineShader->bindAttribLocation(0, "vertexPosition");
 
 	if(!m_OutlineShader->link() ||
 		!m_FlatShader->link())
 	{
-		printf("Error linking shaders, exiting");
+		printf("\nError linking shaders, exiting");
 		exit(EXIT_FAILURE);
 	}
+	//get uniform locations
 	m_OffsetLocation = m_FlatShader->getUniformLocation("offset");
 	m_OutlineOffsetLocation = m_OutlineShader->getUniformLocation("offset");
 }
@@ -100,10 +111,6 @@ void Renderer::render(float dt)
 	glUniform2f(m_OffsetLocation, dx, dy);
 	glBindVertexArray(m_FlatVaoID);
 	
-	//glBindBuffer(GL_ARRAY_BUFFER, m_VertexBuffer);
-	
-	glVertexAttribPointer(0, 4, GL_FLOAT, GL_FALSE, 0, 0);
-	glVertexAttribPointer(1, 4, GL_FLOAT, GL_FALSE, 0, (void*)(4*3*sizeof(*g_TriangleVertices)));
 	glDrawElements(GL_TRIANGLE_STRIP, sizeof(g_TriangleIndices)/sizeof(*g_TriangleIndices), GL_UNSIGNED_BYTE, (void*)0);
 
 	// Draw outline
@@ -112,9 +119,7 @@ void Renderer::render(float dt)
 	glLineWidth(4.f);
 	glBindVertexArray(m_OutlineVaoID);
 
-	//glBindBuffer(GL_ARRAY_BUFFER, m_OutlineBuffer[0]);
 	//glEnableVertexAttribArray(0);
-	glVertexAttribPointer(1, 4, GL_FLOAT, GL_FALSE, 0, 0);
 	glDrawElements(GL_LINE_STRIP, sizeof(g_OutlineIndices)/sizeof(*g_OutlineIndices), GL_UNSIGNED_BYTE, (void*)0);
 	
 	glBindVertexArray(0);

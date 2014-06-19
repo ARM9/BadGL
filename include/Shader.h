@@ -11,6 +11,7 @@ public:
 	bool link();
 	void use();
 
+	void bindAttribLocation(GLuint index, const char *name);
 	GLint getUniformLocation(const char *name);
 protected:
 	void deleteShaders();

@@ -1,6 +1,7 @@
-#version 330 core
+#version 150 core
 
-layout(location = 1) in vec4 vertexPosition;
+//layout(location = 0) in vec4 vertexPosition;
+in vec3 vertexPosition;
 
 uniform vec2 offset;
 

@@ -39,6 +39,7 @@ $(PRECOMPILED) : include/Precompiled.h
 .PHONY: clean, run
 
 all: $(OUTPUT)
+	
 
 clean:
 	rm -rf $(OFILES) $(OUTPUT) $(PRECOMPILED)

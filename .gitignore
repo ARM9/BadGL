@@ -7,17 +7,19 @@ Release/
 *.h.gch
 *.sublime-project
 *.sublime-workspace
+*.vim
 *.npp
 *.pnproj
 *.pnps
 *.vcproj
-*.vim
 *.sln
 *.ncb
 *.suo
 *.user
 
-*.*~
+*~
+*.swp
+*.tmp
 .DS_Store
 .DS_Store?
 ._*
