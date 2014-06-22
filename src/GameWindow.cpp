@@ -8,9 +8,9 @@ GameWindow::GameWindow(int width, int height, const char * title)
 	m_Renderer(nullptr)
 {
 	glfwWindowHint(GLFW_SAMPLES, 4);
-	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
+	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_COMPAT_PROFILE);
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
-	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 2);
+	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
 	m_Window = glfwCreateWindow(m_Width, m_Height, title, NULL, NULL);
 	if(!m_Window){
 		printf("Error: could not initialize glfw.");

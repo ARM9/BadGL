@@ -101,6 +101,7 @@ Renderer::~Renderer()
 float dx = 0.0f, dy = 0.0f;
 void Renderer::render(float dt)
 {
+	glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 	//float ratio = m_iWidth / (float)m_iHeight;
 	glClear(GL_COLOR_BUFFER_BIT);
 	dx = sin(glfwGetTime());
@@ -118,8 +119,9 @@ void Renderer::render(float dt)
 	glUniform2f(m_OutlineOffsetLocation, dx, dy);
 	glLineWidth(4.f);
 	glBindVertexArray(m_OutlineVaoID);
-
+	
 	//glEnableVertexAttribArray(0);
+	//glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 	glDrawElements(GL_LINE_STRIP, sizeof(g_OutlineIndices)/sizeof(*g_OutlineIndices), GL_UNSIGNED_BYTE, (void*)0);
 	
 	glBindVertexArray(0);
