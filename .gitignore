@@ -5,18 +5,14 @@ Release/
 *.obj
 *.o
 *.h.gch
-*.sublime-project
-*.sublime-workspace
 *.vim
-*.npp
-*.pnproj
-*.pnps
 *.vcproj
 *.sln
 *.ncb
 *.suo
 *.user
 
+.*~
 *~
 *.swp
 *.tmp
