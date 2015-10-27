@@ -11,6 +11,10 @@ Release/
 *.ncb
 *.suo
 *.user
+*.opensdf
+*.sdf
+ipch
+
 
 .*~
 *~
