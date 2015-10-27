@@ -28,7 +28,7 @@ bool Shader::load(GLenum type, const char *file)
 		return false;
 	}
 #ifdef _DEBUG
-	printf("\n%s", shaderCode.c_str());
+//	printf("\n%s", shaderCode.c_str());
 #endif
 
 	GLenum shaderID = glCreateShader(type);

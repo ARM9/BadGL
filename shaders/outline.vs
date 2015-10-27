@@ -1,7 +1,7 @@
 #version 150 core
 
 //layout(location = 0) in vec4 vertexPosition;
-in vec3 vertexPosition;
+in vec4 vertexPosition;
 
 uniform vec2 offset;
 
